@@ -1,0 +1,11 @@
+UserProfile,450,5,GET
+UpdateProfile,900,300,POST
+Search,950,1202,POST
+ViewItem,120,300,GET
+AddItem,300,200,POST
+RemoveItem,120,200,POST
+ProdDesc,20,160,GET
+makePayment,45,75,POST
+viewReview,39,28,GET
+submitReview,120,300,POST
+similarProduct,890,1400,GET
