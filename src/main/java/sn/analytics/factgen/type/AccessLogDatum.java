@@ -162,12 +162,65 @@ public class AccessLogDatum implements Serializable {
         }
 
     }
+    public static void dumpAvroSchema(){
 
+        List<Field> fields =
+                FieldUtils.getAllFieldsList(AccessLogDatum.class);
+
+
+        final String QUOTE ="\"";
+
+        StringBuilder sb = new StringBuilder();
+        for(Field fld : fields){
+            //System.out.print(fld.getType().getName());
+            sb.append("{").append(QUOTE).append("name").append(QUOTE).append(":").append("  ")
+                    .append(QUOTE)
+                    .append(fld.getName())
+                    .append(QUOTE)
+                    .append(" , ");
+            sb.append(QUOTE).append("type").append(QUOTE).append(":");
+
+            if (fld.getType().equals(String.class)){
+                sb.append(QUOTE).append("string").append(QUOTE);
+            }else if (fld.getType().getName().equals("int")){
+                sb.append(QUOTE).append("int").append(QUOTE);
+            }else{
+
+
+            }
+            sb.append("}").append(",");
+            sb.append("\n");
+
+            // break;
+            //sb.append(fld.getName() +" " + )
+        }
+
+        System.out.println(sb.toString());
+
+    }
+
+    public static void printFieldNames(){
+        List<Field> fields =
+                FieldUtils.getAllFieldsList(AccessLogDatum.class);
+
+        for(Field fld : fields){
+            //System.out.print(fld.getType().getName());
+            StringBuilder sb = new StringBuilder();
+            sb.append("logData.");
+            sb.append(fld.getName()).append("=").append("datum.").append(fld.getName());
+            sb.append(";");
+            //sb.append(fld.getName() +" " + )
+            System.out.println(sb.toString());
+        }
+
+    }
     public static void main(String[] args) {
 
-        generateSchema();
+       // generateSchema();
         //generateInsertInto();
         //generatePrepStmt();
+       // dumpAvroSchema();
+        printFieldNames();
 
     }
 }

@@ -10,6 +10,7 @@ import org.joda.time.format.DateTimeFormatter;
 import sn.analytics.factgen.processor.DBLoader;
 import sn.analytics.factgen.processor.DataProcessor;
 import sn.analytics.factgen.processor.FileDumper;
+import sn.analytics.factgen.processor.ParquetDataProcessor;
 import sn.analytics.factgen.type.AccessLogDatum;
 import sn.analytics.factgen.type.GeoData;
 import sn.analytics.factgen.type.RequestUriData;
@@ -52,7 +53,7 @@ public class FactGenerator {
 
     long recordCount = 0;
 
-    static final DateTimeFormatter MILL_SECONDS_FORMAT = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.SSS");
+    public static final DateTimeFormatter MILL_SECONDS_FORMAT = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.SSS");
 
     static final DateTimeFormatter SECONDS_FORMAT = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
 
@@ -182,6 +183,8 @@ public class FactGenerator {
                 if (txnInSession > maxTxnPerSessionPerUser) {
                     flipSession = true;
                     txnInSession=0;
+                    //just make it a little random
+                    maxTxnPerSessionPerUser = rgen.nextInt(maxTxnPerSessionPerUser) + 1;
 
                 }else{
                     flipSession=false;
@@ -230,32 +233,37 @@ public class FactGenerator {
     }
 
     public static void usage() {
-        System.out.println("Usage: <StartTimestamp> <EndTimestamp> <TPS> <Destination DB|File> <db.properties | FilePath>");
+        System.out.println("Usage: [File|Parquet] <StartTimestamp> <EndTimestamp> <TPS> [filename] [HadoopConfDir] ");
         System.exit(1);
     }
+    //File "2014-11-13 11:06:00" "2014-11-13 11:08:00" 10 /tmp/factnew.csv
+
+    //Parquet "2014-11-13 11:06:00" "2014-11-13 11:08:00" 10 /logstore/logdata1.parq /opt/hadoop104/conf
 
     public static void main(String[] args) {
-        //if ()
         if (args.length < 4) usage();
         FactGenerator factGenerator = new FactGenerator();
         boolean waitForCompletion = false;
-        //arguments are
-        //start time, endtime
+
+       final String destType = args[0];
+        int tps= Integer.valueOf(args[3]);
 
 
-        for (int i = 3; i < args.length; i++) {
-
-            if (args[i].startsWith("File")) {
-                final String fileName = args[i].split("\\=")[1];
+        if (destType.startsWith("File")) {
+                final String fileName = args[4];
                 DataProcessor fileProcessor = new FileDumper(fileName, false);
                 fileProcessor.init();
                 factGenerator.getProcessors().add(fileProcessor);
-            } else if (args[i].startsWith("Parquet")) {
+            } else if (destType.startsWith("Parquet")) {
+                final String outFile = args[4];
+                final String hadoopConfDir=args[5];
+                ParquetDataProcessor parquetDataProcessor = new ParquetDataProcessor(hadoopConfDir,outFile);
+                parquetDataProcessor.init();
+                factGenerator.getProcessors().add(parquetDataProcessor);
+                waitForCompletion=true;
+             }else {usage();}
 
-
-            }
-        }
-/*
+        /*
         TODO: complete DBLoader to enable streaming directly to DB
         final String dbProps = args[i].split("\\=")[1];
         DataProcessor dbProcessor = new DBLoader(dbProps);
@@ -263,19 +271,19 @@ public class FactGenerator {
         factGenerator.getProcessors().add(dbProcessor);
        */
 
-        int tps= Integer.valueOf(args[2]);
         factGenerator.init(tps);
         Stopwatch sw = Stopwatch.createStarted();
-        factGenerator.generateFacts(args[0], args[1],tps);
+        factGenerator.generateFacts(args[1], args[2],tps);
         sw.stop();
+
+        factGenerator.finalizeResources();
         if (waitForCompletion) {
             try {
-                Thread.sleep(60 * 1000);
+                Thread.sleep(10 * 1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
-        factGenerator.finalizeResources();
 
         logger.info("Completed data generation:" + sw.elapsed(TimeUnit.SECONDS) + " seconds");
     }

@@ -1,0 +1,31 @@
+{
+    "type": "record",
+    "name": "sn.analytics.type.LogData",
+    "doc": "Accesslogdata",
+    "fields": [
+    {"name":  "accessUrl" , "type":"string"},
+    {"name":  "responseStatusCode" , "type":"int"},
+    {"name":  "responseTime" , "type":"int"},
+    {"name":  "receivedTimestamp" , "type":"long"},
+    {"name":  "requestVerb" , "type":"string"},
+    {"name":  "requestSize" , "type":"int"},
+    {"name":  "dataExchangeSize" , "type":"int"},
+    {"name":  "serverIp" , "type":"string"},
+    {"name":  "clientIp" , "type":"string"},
+    {"name":  "clientId" , "type":"string"},
+    {"name":  "sessionId" , "type":"string"},
+    {"name":  "userAgentDevice" , "type":"string"},
+    {"name":  "UserAgentType" , "type":"string"},
+    {"name":  "userAgentFamily" , "type":"string"},
+    {"name":  "userAgentOSFamily" , "type":"string"},
+    {"name":  "userAgentVersion" , "type":"string"},
+    {"name":  "userAgentOSVersion" , "type":"string"},
+    {"name":  "city" , "type":"string"},
+    {"name":  "country" , "type":"string"},
+    {"name":  "region" , "type":"string"},
+    {"name":  "minOfDay" , "type":"int"},
+    {"name":  "hourOfDay" , "type":"int"},
+    {"name":  "dayOfWeek" , "type":"int"},
+    {"name":  "monthOfYear" , "type":"int"}
+    ]
+}

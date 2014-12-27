@@ -7,6 +7,18 @@
     <groupId>sn.analytics</groupId>
     <artifactId>factdatagenerator</artifactId>
     <version>1.0-SNAPSHOT</version>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+            <maven.compiler.target>1.8</maven.compiler.target>
+            <maven.compiler.source>1.8</maven.compiler.source>
+
+        <parquet.version>1.5.0</parquet.version>
+
+        <avro.version>1.7.7</avro.version>
+        <hadoop.version>1.0.4</hadoop.version>
+    </properties>
     <dependencies>
         <dependency>
             <groupId>joda-time</groupId>
@@ -40,12 +52,13 @@
             <version>9.3-1100-jdbc4</version>
         </dependency>
 
+        <!--
         <dependency>
                      <groupId>com.github.stephenc.high-scale-lib</groupId>
                      <artifactId>high-scale-lib</artifactId>
                      <version>1.1.2</version>
                   </dependency>
-
+        -->
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
@@ -60,6 +73,53 @@
             <groupId>org.xerial.snappy</groupId>
             <artifactId>snappy-java</artifactId>
             <version>1.1.1.6</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>com.twitter</groupId>
+            <artifactId>parquet-column</artifactId>
+            <version>1.5.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.twitter</groupId>
+            <artifactId>parquet-avro</artifactId>
+            <version>${parquet.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.twitter</groupId>
+            <artifactId>parquet-hadoop</artifactId>
+            <version>${parquet.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.avro</groupId>
+            <artifactId>avro</artifactId>
+            <version>${avro.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.avro</groupId>
+            <artifactId>avro-mapred</artifactId>
+            <version>${avro.version}</version>
+        </dependency>
+        <dependency>
+
+            <groupId>com.thoughtworks.paranamer</groupId>
+            <artifactId>paranamer</artifactId>
+            <version>2.5.6</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-configuration</groupId>
+            <artifactId>commons-configuration</artifactId>
+            <version>1.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-core</artifactId>
+            <version>${hadoop.version}</version>
         </dependency>
 
     </dependencies>
