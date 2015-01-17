@@ -94,6 +94,7 @@ public class FactGenerator {
 
         if (flipSessionId)
             initSessionData();
+            
 
         RequestUriData uridata = uridataBag.get(rgen.nextInt(uridataBag.size()));
         String target = Data.targetStrs[rgen.nextInt(Data.targetStrs.length)] + "/"+ uridata.getUriName();
@@ -131,7 +132,6 @@ public class FactGenerator {
         String[] userAgentTkns = str.split(",");
         accessLogDatum.serverIp = serverIpSet[rgen.nextInt(maxServerIp)];
 
-        accessLogDatum.clientId = clientIdSet[rgen.nextInt(maxClientIds)];
         // "Mobile Browser,7.1,iOS,7.0,Tablet,Mobile Safari",
         accessLogDatum.userAgentDevice = userAgentTkns[4];
         accessLogDatum.UserAgentType = userAgentTkns[0];
@@ -183,8 +183,14 @@ public class FactGenerator {
                 if (txnInSession > maxTxnPerSessionPerUser) {
                     flipSession = true;
                     txnInSession=0;
+                    
                     //just make it a little random
-                    maxTxnPerSessionPerUser = rgen.nextInt(maxTxnPerSessionPerUser) + 1;
+                    if (maxTxnPerSessionPerUser < 1) maxTxnPerSessionPerUser =2;
+                    int nextRandInt = rgen.nextInt(maxTxnPerSessionPerUser);
+                    if (nextRandInt < 2) 
+                        maxTxnPerSessionPerUser = 2;
+                    else
+                        maxTxnPerSessionPerUser = nextRandInt ;
 
                 }else{
                     flipSession=false;
