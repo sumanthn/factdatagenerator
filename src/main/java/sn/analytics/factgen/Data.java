@@ -1,7 +1,7 @@
 package sn.analytics.factgen;
 
 /**
- * Created by Sumanth on 20/11/14.
+ * Created by Sumanth
  */
 public class Data {
 
@@ -24,13 +24,4 @@ public class Data {
             "MapMaker",
             "DataCrunch"
     };
-
-    public static String [] apiProduct = new String[]{
-            "UI",
-            "DB",
-            "Monitor",
-            "ML"
-
-    };
-
 }

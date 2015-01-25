@@ -1,6 +1,5 @@
 package sn.analytics.factgen.type;
 
-import com.google.common.base.Joiner;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -67,101 +66,8 @@ public class AccessLogDatum implements Serializable {
         return fieldNames;
     }
 
-    public static void generateSchema() {
-        List<Field> fields =
-                FieldUtils.getAllFieldsList(AccessLogDatum.class);
 
-        System.out.println("CREATE TABLE groupbytest (");
-        StringBuilder sb = new StringBuilder();
-        for (Field fld : fields) {
-            //System.out.print(fld.getType().getName());
-            if (fld.getType().equals(String.class)) {
-                if (fld.getName().contains("timestamp") || fld.getName().contains("time")) {
-                    sb.append(fld.getName() + " " + "timestamp without time zone ");
-                } else {
-                    sb.append(fld.getName() + " " + "text");
-                }
-            } else if (fld.getType().getName().equals("int")) {
-                sb.append(fld.getName() + " " + "int");
-            } else {
-                sb.append(fld.getName() + " " + "timestamp");
 
-            }
-            sb.append(",");
-            sb.append("\n");
-
-            //sb.append(fld.getName() +" " + )
-        }
-
-        System.out.println(sb.toString());
-    }
-
-    static void generateInsertInto() {
-        List<Field> fields =
-                FieldUtils.getAllFieldsList(AccessLogDatum.class);
-
-        List<String> fldStrs = new ArrayList<String>();
-        List<String> placeHolders = new ArrayList<String>();
-        for (Field fld : fields) {
-            fldStrs.add(fld.getName());
-            placeHolders.add("?");
-        }
-
-        String insertIntoFlds = Joiner.on(",").join(fldStrs);
-        String valPlaceHolders = Joiner.on(",").join(placeHolders);
-        StringBuilder sb = new StringBuilder("INSERT INTO GROUPBYTEST ");
-        sb.append("(").append(insertIntoFlds).append(")")
-                .append(" VALUES ").append("(").append(valPlaceHolders).append(")");
-
-        System.out.println(sb.toString());
-
-        System.out.println();
-
-        System.out.println("Num of fields:" + placeHolders.size());
-
-    }
-
-    static void generatePrepStmt() {
-        List<Field> fields =
-                FieldUtils.getAllFieldsList(AccessLogDatum.class);
-
-        String prefix = "pstmt";
-
-        int fldCount = 1;
-        for (Field fld : fields) {
-            StringBuilder sb = new StringBuilder();
-
-            if (fld.getType().equals(String.class)) {
-
-                if (fld.getName().contains("timestamp") || fld.getName().contains("time")) {
-
-                    sb.append(prefix).append(".").append("setTimestamp(").append(fldCount)
-                            .append(",new Timestamp(DateTime.parse(datum.").append(fld.getName())
-                            .append(", MILL_SECONDS_FORMAT).getMillis()));");
-
-                } else {
-                    //setString(3, datum.apiproxy);
-                    sb.append(prefix).append(".").append("setString(").
-                            append(fldCount).append(",").append("datum").append(".").append(fld.getName()).append(")");
-
-                }
-            } else if (fld.getType().getName().equals("int")) {
-
-                sb.append(prefix).append(".").append("setInt(").
-                        append(fldCount).append(",").append("datum").append(".").append(fld.getName()).append(")");
-            } else {
-                System.out.println("unknown TYPE");
-
-            }
-
-            sb.append(";");
-            System.out.println(sb.toString());
-
-            fldCount++;
-
-        }
-
-    }
     public static void dumpAvroSchema(){
 
         List<Field> fields =
@@ -216,9 +122,6 @@ public class AccessLogDatum implements Serializable {
     }
     public static void main(String[] args) {
 
-       // generateSchema();
-        //generateInsertInto();
-        //generatePrepStmt();
        // dumpAvroSchema();
         printFieldNames();
 

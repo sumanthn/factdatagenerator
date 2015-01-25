@@ -17,13 +17,13 @@ import java.io.InputStream;
 
 /**
  * Parquet, Avro based file processor
- * Created by Sumanth on 24/12/14.
+ * Created by Sumanth
  */
 public class ParquetDataProcessor implements DataProcessor {
 
      private Logger logger = LoggerFactory.getLogger(ParquetDataProcessor.class);
     //to generate schema
-    // java -jar avro-tools-1.7.7.jar compile schema /Users/Sumanth/codebase2/analytics/analytics/tools/factdatagenerator/src/main/resources/logData.avsc /tmp/src1/
+    // java -jar avro-tools-1.7.7.jar compile schema <schemafile> <outdir>
 
     Configuration conf = new Configuration();
 

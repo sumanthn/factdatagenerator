@@ -1,13 +1,11 @@
 package sn.analytics.factgen;
 
 import com.google.common.base.Stopwatch;
-import org.apache.commons.lang3.time.StopWatch;
 import org.apache.commons.math3.distribution.GammaDistribution;
 import org.apache.commons.math3.distribution.ZipfDistribution;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import sn.analytics.factgen.processor.DBLoader;
 import sn.analytics.factgen.processor.DataProcessor;
 import sn.analytics.factgen.processor.FileDumper;
 import sn.analytics.factgen.processor.ParquetDataProcessor;
@@ -75,9 +73,9 @@ public class FactGenerator {
 
 
     private void generateClientIds(){
-        Random random = new Random(10202);
+        Random random = new Random(2010);
         for(int i=0;i < maxClientIds;i++)
-            clientIdSet[i] = "" + random.nextInt(20102);
+            clientIdSet[i] = "" + random.nextInt(10201);
 
     }
 
@@ -127,7 +125,7 @@ public class FactGenerator {
         //could math already generated data
         accessLogDatum.responseTime = uridata.responseTime + responseTimeAddenum + 2 * responseTimeAddenum;
         int userAgentIdx = curSessionData.getUserAgentIdx();
-        String str = UserAgentDataSet.userAgentSet[userAgentIdx];
+        String str = UserAgentDataSet.userAgentData[userAgentIdx];
 
         String[] userAgentTkns = str.split(",");
         accessLogDatum.serverIp = serverIpSet[rgen.nextInt(maxServerIp)];
@@ -269,13 +267,6 @@ public class FactGenerator {
                 waitForCompletion=true;
              }else {usage();}
 
-        /*
-        TODO: complete DBLoader to enable streaming directly to DB
-        final String dbProps = args[i].split("\\=")[1];
-        DataProcessor dbProcessor = new DBLoader(dbProps);
-        dbProcessor.init();
-        factGenerator.getProcessors().add(dbProcessor);
-       */
 
         factGenerator.init(tps);
         Stopwatch sw = Stopwatch.createStarted();

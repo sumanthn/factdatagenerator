@@ -3,6 +3,8 @@ package sn.analytics.factgen.processor;
 
 
 import com.google.common.base.Joiner;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import sn.analytics.factgen.type.AccessLogDatum;
 
 import java.io.*;
@@ -36,9 +38,16 @@ public class FileDumper implements DataProcessor {
             }
             //write the header
             AccessLogDatum accessLogDatum = new AccessLogDatum();
-            writer.write(Joiner.on(",").join(accessLogDatum.getFieldNames()));
-            writer.newLine();
-            writer.flush();
+            String baseName ="/" +  FilenameUtils.getPathNoEndSeparator(fileName);
+            
+            
+            BufferedWriter schemaFile = new BufferedWriter(new FileWriter(baseName+"/schema.csv"));
+
+            schemaFile.write(Joiner.on(",").join(accessLogDatum.getFieldNames()));
+            schemaFile.newLine();
+            schemaFile.flush();
+            schemaFile.close();
+            
         } catch (IOException e) {
             e.printStackTrace();
         }
