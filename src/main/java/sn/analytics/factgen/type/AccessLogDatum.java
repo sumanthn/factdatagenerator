@@ -22,7 +22,7 @@ public class AccessLogDatum implements Serializable {
     public int responseStatusCode;
     public int responseTime;
 
-    public String receivedTimestamp;
+    public String accessTimestamp;
     public String requestVerb;
     public int requestSize;
     public int dataExchangeSize;

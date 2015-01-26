@@ -78,7 +78,7 @@ public class ParquetDataProcessor implements DataProcessor {
         logData.accessUrl=datum.accessUrl;
         logData.responseStatusCode=datum.responseStatusCode;
         logData.responseTime=datum.responseTime;
-        logData.receivedTimestamp= DateTime.parse(datum.receivedTimestamp, FactGenerator.MILL_SECONDS_FORMAT).getMillis();
+        logData.accessTimestamp= DateTime.parse(datum.accessTimestamp, FactGenerator.MILL_SECONDS_FORMAT).getMillis();
 
         logData.requestVerb=datum.requestVerb;
         logData.requestSize=datum.requestSize;

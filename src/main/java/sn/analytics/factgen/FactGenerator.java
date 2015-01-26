@@ -108,7 +108,7 @@ public class FactGenerator {
         accessLogDatum.requestSize = uridata.getResponseSize() + (Math.abs(rgen.nextInt(50)));
         accessLogDatum.responseStatusCode = statusCode;
 
-        accessLogDatum.receivedTimestamp = dateTimeIn.plusMillis(rgen.nextInt(500)).toString(MILL_SECONDS_FORMAT);
+        accessLogDatum.accessTimestamp = dateTimeIn.plusMillis(rgen.nextInt(500)).toString(MILL_SECONDS_FORMAT);
 
         accessLogDatum.clientId = curSessionData.getClientId();
         accessLogDatum.sessionId = curSessionData.getSessionId();
@@ -242,7 +242,7 @@ public class FactGenerator {
     }
     //File "2014-11-13 11:06:00" "2014-11-13 11:08:00" 10 /tmp/factnew.csv
 
-    //Parquet "2014-11-13 11:06:00" "2014-11-13 11:08:00" 10 /logstore/logdata1.parq /opt/hadoop104/conf
+    //Parquet "2014-11-13 11:06:00" "2014-11-13 11:08:00" 10 /factdatastore/logdata1.parq /opt/hadoop104/conf
 
     public static void main(String[] args) {
         if (args.length < 4) usage();

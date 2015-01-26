@@ -6,7 +6,7 @@
     {"name":  "accessUrl" , "type":"string"},
     {"name":  "responseStatusCode" , "type":"int"},
     {"name":  "responseTime" , "type":"int"},
-    {"name":  "receivedTimestamp" , "type":"long"},
+    {"name":  "accessTimestamp" , "type":"long"},
     {"name":  "requestVerb" , "type":"string"},
     {"name":  "requestSize" , "type":"int"},
     {"name":  "dataExchangeSize" , "type":"int"},

@@ -12,7 +12,7 @@ Tries to emulate client interaction within a session.<br>
 Data can be generated for variable transactions per second and for a duration<br>
 Data can be dumped into 
 - CSV files[with schema in different file]
-- Avro + Parquet format
+- Avro + Parquet format<br>
 ###Building
 Build using maven<br>
 <em>mvn clean package</em> <br>
@@ -27,3 +27,9 @@ Generates a CSV file with 1000 access records per second for a duration of 1 min
 To generate data in Avro+Parquet format,<br>
 `java -jar factdatagenerator.jar Parquet "2015-01-25 11:06:00" "2014-01-25 11:07:00" 1000 /logstore/logdata1.parq /hadoop/conf`
 
+####Data dumps into multiple files
+To simulate data dumps at regular intervals(ingestion of data into HDFS), ScheduledDataGenerator (`sn.analytics.factgen.util.scheduledatagen`) can be used<br>
+Example:<br>
+`Parquet  "2014-11-13 11:00:00" "2014-11-13 11:05:00" 10 60 60 /logdatastore /hadoop/conf` <br>
+ Usage: `File|Parquet <StartTimestamp> <EndTimestamp> <TPS> <timeIntervalPerFile> <RunInterval> <outDir>  <hadoopConf>`
+Generates data dump files of tps 60 every one minute into hdfs dir `logdatastore`

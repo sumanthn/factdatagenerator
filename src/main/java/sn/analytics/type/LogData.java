@@ -8,12 +8,12 @@ package sn.analytics.type;
 /** Accesslogdata */
 @org.apache.avro.specific.AvroGenerated
 public class LogData extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"LogData\",\"namespace\":\"sn.analytics.type\",\"doc\":\"Accesslogdata\",\"fields\":[{\"name\":\"accessUrl\",\"type\":\"string\"},{\"name\":\"responseStatusCode\",\"type\":\"int\"},{\"name\":\"responseTime\",\"type\":\"int\"},{\"name\":\"receivedTimestamp\",\"type\":\"long\"},{\"name\":\"requestVerb\",\"type\":\"string\"},{\"name\":\"requestSize\",\"type\":\"int\"},{\"name\":\"dataExchangeSize\",\"type\":\"int\"},{\"name\":\"serverIp\",\"type\":\"string\"},{\"name\":\"clientIp\",\"type\":\"string\"},{\"name\":\"clientId\",\"type\":\"string\"},{\"name\":\"sessionId\",\"type\":\"string\"},{\"name\":\"userAgentDevice\",\"type\":\"string\"},{\"name\":\"UserAgentType\",\"type\":\"string\"},{\"name\":\"userAgentFamily\",\"type\":\"string\"},{\"name\":\"userAgentOSFamily\",\"type\":\"string\"},{\"name\":\"userAgentVersion\",\"type\":\"string\"},{\"name\":\"userAgentOSVersion\",\"type\":\"string\"},{\"name\":\"city\",\"type\":\"string\"},{\"name\":\"country\",\"type\":\"string\"},{\"name\":\"region\",\"type\":\"string\"},{\"name\":\"minOfDay\",\"type\":\"int\"},{\"name\":\"hourOfDay\",\"type\":\"int\"},{\"name\":\"dayOfWeek\",\"type\":\"int\"},{\"name\":\"monthOfYear\",\"type\":\"int\"}]}");
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"LogData\",\"namespace\":\"sn.analytics.type\",\"doc\":\"Accesslogdata\",\"fields\":[{\"name\":\"accessUrl\",\"type\":\"string\"},{\"name\":\"responseStatusCode\",\"type\":\"int\"},{\"name\":\"responseTime\",\"type\":\"int\"},{\"name\":\"accessTimestamp\",\"type\":\"long\"},{\"name\":\"requestVerb\",\"type\":\"string\"},{\"name\":\"requestSize\",\"type\":\"int\"},{\"name\":\"dataExchangeSize\",\"type\":\"int\"},{\"name\":\"serverIp\",\"type\":\"string\"},{\"name\":\"clientIp\",\"type\":\"string\"},{\"name\":\"clientId\",\"type\":\"string\"},{\"name\":\"sessionId\",\"type\":\"string\"},{\"name\":\"userAgentDevice\",\"type\":\"string\"},{\"name\":\"UserAgentType\",\"type\":\"string\"},{\"name\":\"userAgentFamily\",\"type\":\"string\"},{\"name\":\"userAgentOSFamily\",\"type\":\"string\"},{\"name\":\"userAgentVersion\",\"type\":\"string\"},{\"name\":\"userAgentOSVersion\",\"type\":\"string\"},{\"name\":\"city\",\"type\":\"string\"},{\"name\":\"country\",\"type\":\"string\"},{\"name\":\"region\",\"type\":\"string\"},{\"name\":\"minOfDay\",\"type\":\"int\"},{\"name\":\"hourOfDay\",\"type\":\"int\"},{\"name\":\"dayOfWeek\",\"type\":\"int\"},{\"name\":\"monthOfYear\",\"type\":\"int\"}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
   @Deprecated public java.lang.CharSequence accessUrl;
   @Deprecated public int responseStatusCode;
   @Deprecated public int responseTime;
-  @Deprecated public long receivedTimestamp;
+  @Deprecated public long accessTimestamp;
   @Deprecated public java.lang.CharSequence requestVerb;
   @Deprecated public int requestSize;
   @Deprecated public int dataExchangeSize;
@@ -45,11 +45,11 @@ public class LogData extends org.apache.avro.specific.SpecificRecordBase impleme
   /**
    * All-args constructor.
    */
-  public LogData(java.lang.CharSequence accessUrl, java.lang.Integer responseStatusCode, java.lang.Integer responseTime, java.lang.Long receivedTimestamp, java.lang.CharSequence requestVerb, java.lang.Integer requestSize, java.lang.Integer dataExchangeSize, java.lang.CharSequence serverIp, java.lang.CharSequence clientIp, java.lang.CharSequence clientId, java.lang.CharSequence sessionId, java.lang.CharSequence userAgentDevice, java.lang.CharSequence UserAgentType, java.lang.CharSequence userAgentFamily, java.lang.CharSequence userAgentOSFamily, java.lang.CharSequence userAgentVersion, java.lang.CharSequence userAgentOSVersion, java.lang.CharSequence city, java.lang.CharSequence country, java.lang.CharSequence region, java.lang.Integer minOfDay, java.lang.Integer hourOfDay, java.lang.Integer dayOfWeek, java.lang.Integer monthOfYear) {
+  public LogData(java.lang.CharSequence accessUrl, java.lang.Integer responseStatusCode, java.lang.Integer responseTime, java.lang.Long accessTimestamp, java.lang.CharSequence requestVerb, java.lang.Integer requestSize, java.lang.Integer dataExchangeSize, java.lang.CharSequence serverIp, java.lang.CharSequence clientIp, java.lang.CharSequence clientId, java.lang.CharSequence sessionId, java.lang.CharSequence userAgentDevice, java.lang.CharSequence UserAgentType, java.lang.CharSequence userAgentFamily, java.lang.CharSequence userAgentOSFamily, java.lang.CharSequence userAgentVersion, java.lang.CharSequence userAgentOSVersion, java.lang.CharSequence city, java.lang.CharSequence country, java.lang.CharSequence region, java.lang.Integer minOfDay, java.lang.Integer hourOfDay, java.lang.Integer dayOfWeek, java.lang.Integer monthOfYear) {
     this.accessUrl = accessUrl;
     this.responseStatusCode = responseStatusCode;
     this.responseTime = responseTime;
-    this.receivedTimestamp = receivedTimestamp;
+    this.accessTimestamp = accessTimestamp;
     this.requestVerb = requestVerb;
     this.requestSize = requestSize;
     this.dataExchangeSize = dataExchangeSize;
@@ -79,7 +79,7 @@ public class LogData extends org.apache.avro.specific.SpecificRecordBase impleme
     case 0: return accessUrl;
     case 1: return responseStatusCode;
     case 2: return responseTime;
-    case 3: return receivedTimestamp;
+    case 3: return accessTimestamp;
     case 4: return requestVerb;
     case 5: return requestSize;
     case 6: return dataExchangeSize;
@@ -110,7 +110,7 @@ public class LogData extends org.apache.avro.specific.SpecificRecordBase impleme
     case 0: accessUrl = (java.lang.CharSequence)value$; break;
     case 1: responseStatusCode = (java.lang.Integer)value$; break;
     case 2: responseTime = (java.lang.Integer)value$; break;
-    case 3: receivedTimestamp = (java.lang.Long)value$; break;
+    case 3: accessTimestamp = (java.lang.Long)value$; break;
     case 4: requestVerb = (java.lang.CharSequence)value$; break;
     case 5: requestSize = (java.lang.Integer)value$; break;
     case 6: dataExchangeSize = (java.lang.Integer)value$; break;
@@ -181,18 +181,18 @@ public class LogData extends org.apache.avro.specific.SpecificRecordBase impleme
   }
 
   /**
-   * Gets the value of the 'receivedTimestamp' field.
+   * Gets the value of the 'accessTimestamp' field.
    */
-  public java.lang.Long getReceivedTimestamp() {
-    return receivedTimestamp;
+  public java.lang.Long getAccessTimestamp() {
+    return accessTimestamp;
   }
 
   /**
-   * Sets the value of the 'receivedTimestamp' field.
+   * Sets the value of the 'accessTimestamp' field.
    * @param value the value to set.
    */
-  public void setReceivedTimestamp(java.lang.Long value) {
-    this.receivedTimestamp = value;
+  public void setAccessTimestamp(java.lang.Long value) {
+    this.accessTimestamp = value;
   }
 
   /**
@@ -519,7 +519,7 @@ public class LogData extends org.apache.avro.specific.SpecificRecordBase impleme
     private java.lang.CharSequence accessUrl;
     private int responseStatusCode;
     private int responseTime;
-    private long receivedTimestamp;
+    private long accessTimestamp;
     private java.lang.CharSequence requestVerb;
     private int requestSize;
     private int dataExchangeSize;
@@ -561,8 +561,8 @@ public class LogData extends org.apache.avro.specific.SpecificRecordBase impleme
         this.responseTime = data().deepCopy(fields()[2].schema(), other.responseTime);
         fieldSetFlags()[2] = true;
       }
-      if (isValidValue(fields()[3], other.receivedTimestamp)) {
-        this.receivedTimestamp = data().deepCopy(fields()[3].schema(), other.receivedTimestamp);
+      if (isValidValue(fields()[3], other.accessTimestamp)) {
+        this.accessTimestamp = data().deepCopy(fields()[3].schema(), other.accessTimestamp);
         fieldSetFlags()[3] = true;
       }
       if (isValidValue(fields()[4], other.requestVerb)) {
@@ -662,8 +662,8 @@ public class LogData extends org.apache.avro.specific.SpecificRecordBase impleme
         this.responseTime = data().deepCopy(fields()[2].schema(), other.responseTime);
         fieldSetFlags()[2] = true;
       }
-      if (isValidValue(fields()[3], other.receivedTimestamp)) {
-        this.receivedTimestamp = data().deepCopy(fields()[3].schema(), other.receivedTimestamp);
+      if (isValidValue(fields()[3], other.accessTimestamp)) {
+        this.accessTimestamp = data().deepCopy(fields()[3].schema(), other.accessTimestamp);
         fieldSetFlags()[3] = true;
       }
       if (isValidValue(fields()[4], other.requestVerb)) {
@@ -821,26 +821,26 @@ public class LogData extends org.apache.avro.specific.SpecificRecordBase impleme
       return this;
     }
 
-    /** Gets the value of the 'receivedTimestamp' field */
-    public java.lang.Long getReceivedTimestamp() {
-      return receivedTimestamp;
+    /** Gets the value of the 'accessTimestamp' field */
+    public java.lang.Long getAccessTimestamp() {
+      return accessTimestamp;
     }
     
-    /** Sets the value of the 'receivedTimestamp' field */
-    public sn.analytics.type.LogData.Builder setReceivedTimestamp(long value) {
+    /** Sets the value of the 'accessTimestamp' field */
+    public sn.analytics.type.LogData.Builder setAccessTimestamp(long value) {
       validate(fields()[3], value);
-      this.receivedTimestamp = value;
+      this.accessTimestamp = value;
       fieldSetFlags()[3] = true;
       return this; 
     }
     
-    /** Checks whether the 'receivedTimestamp' field has been set */
-    public boolean hasReceivedTimestamp() {
+    /** Checks whether the 'accessTimestamp' field has been set */
+    public boolean hasAccessTimestamp() {
       return fieldSetFlags()[3];
     }
     
-    /** Clears the value of the 'receivedTimestamp' field */
-    public sn.analytics.type.LogData.Builder clearReceivedTimestamp() {
+    /** Clears the value of the 'accessTimestamp' field */
+    public sn.analytics.type.LogData.Builder clearAccessTimestamp() {
       fieldSetFlags()[3] = false;
       return this;
     }
@@ -1346,7 +1346,7 @@ public class LogData extends org.apache.avro.specific.SpecificRecordBase impleme
         record.accessUrl = fieldSetFlags()[0] ? this.accessUrl : (java.lang.CharSequence) defaultValue(fields()[0]);
         record.responseStatusCode = fieldSetFlags()[1] ? this.responseStatusCode : (java.lang.Integer) defaultValue(fields()[1]);
         record.responseTime = fieldSetFlags()[2] ? this.responseTime : (java.lang.Integer) defaultValue(fields()[2]);
-        record.receivedTimestamp = fieldSetFlags()[3] ? this.receivedTimestamp : (java.lang.Long) defaultValue(fields()[3]);
+        record.accessTimestamp = fieldSetFlags()[3] ? this.accessTimestamp : (java.lang.Long) defaultValue(fields()[3]);
         record.requestVerb = fieldSetFlags()[4] ? this.requestVerb : (java.lang.CharSequence) defaultValue(fields()[4]);
         record.requestSize = fieldSetFlags()[5] ? this.requestSize : (java.lang.Integer) defaultValue(fields()[5]);
         record.dataExchangeSize = fieldSetFlags()[6] ? this.dataExchangeSize : (java.lang.Integer) defaultValue(fields()[6]);
