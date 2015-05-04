@@ -25,7 +25,9 @@ public class InputDataLoader {
 
     public static void loadIpNames(final int maxClientIp,final String [] clientIpSet,Map<String,GeoData> geoDataMap){
         Random rgen = new Random();
-        InputStream inStream = ClassLoader.class.getResourceAsStream("/ipnames.csv");
+        //InputStream inStream = ClassLoader.class.getResourceAsStream("/ipnames.csv");
+        //InputStream inStream = InputDataLoader.class.getResourceAsStream("/ipnames.csv");
+        InputStream inStream = InputDataLoader.class.getResourceAsStream("/ipnames-noext.csv");
         int count=0;
         //this will make client ip set totally not repeatable over iterations
         try {
@@ -63,7 +65,8 @@ public class InputDataLoader {
 
         List<RequestUriData> uriDataBag = new ArrayList<RequestUriData>();
         BufferedReader reader = null;
-        InputStream inStream = ClassLoader.class.getResourceAsStream("/uri.txt");
+        //InputStream inStream = ClassLoader.class.getResourceAsStream("/uri.txt");
+        InputStream inStream = InputDataLoader.class.getResourceAsStream("/uri.txt");
 
         try {
             reader = new BufferedReader(new InputStreamReader(inStream));

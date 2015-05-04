@@ -8,6 +8,7 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import sn.analytics.factgen.processor.DataProcessor;
 import sn.analytics.factgen.processor.FileDumper;
+import sn.analytics.factgen.processor.HiveOrcDataProcessor;
 import sn.analytics.factgen.processor.ParquetDataProcessor;
 import sn.analytics.factgen.type.AccessLogDatum;
 import sn.analytics.factgen.type.GeoData;
@@ -54,6 +55,8 @@ public class FactGenerator {
     public static final DateTimeFormatter MILL_SECONDS_FORMAT = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.SSS");
 
     static final DateTimeFormatter SECONDS_FORMAT = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
+    static final DateTimeFormatter DAY_FORMAT = DateTimeFormat.forPattern("yyyyMMdd");
+
 
     public FactGenerator() {
         rgen = new Random();
@@ -156,10 +159,65 @@ public class FactGenerator {
         accessLogDatum.dayOfWeek = dateTime.getDayOfWeek();
         accessLogDatum.monthOfYear = dateTime.getMonthOfYear();
         accessLogDatum.minOfDay = dateTime.getMinuteOfDay();
+        accessLogDatum.day = dateTime.toString(DAY_FORMAT);
+
 
         return accessLogDatum;
 
     }
+
+
+    public List<AccessLogDatum> generateFactDatumBag(final String startTimeStr, final String endTimeStr, int tps ){
+            List<AccessLogDatum> logDatums = new ArrayList<AccessLogDatum>();
+        DateTime curTs = DateTime.parse(startTimeStr, SECONDS_FORMAT);
+        DateTime endTs = DateTime.parse(endTimeStr, SECONDS_FORMAT);
+        logger.info("Generate access log data for " + startTimeStr + "[" + curTs.getMillis() +"]"
+                + endTimeStr + "[" + endTs.getMillis() + "]" + " for " + tps );
+        int maxTxnPerSessionPerUser = 3;
+        if (tps > 500)
+            maxTxnPerSessionPerUser=6;
+
+        while (true) {
+
+            int txnInSession =0;
+            boolean flipSession = false;
+
+            for (int i = 0; i < tps; i++) {
+                txnInSession++;
+                if (txnInSession > maxTxnPerSessionPerUser) {
+                    flipSession = true;
+                    txnInSession=0;
+
+                    //just make it a little random
+                    if (maxTxnPerSessionPerUser < 1) maxTxnPerSessionPerUser =2;
+                    int nextRandInt = rgen.nextInt(maxTxnPerSessionPerUser);
+                    if (nextRandInt < 2)
+                        maxTxnPerSessionPerUser = 2;
+                    else
+                        maxTxnPerSessionPerUser = nextRandInt ;
+
+                }else{
+                    flipSession=false;
+
+                }
+
+                AccessLogDatum accessLogDatum = buildDatum(curTs, flipSession);
+                logDatums.add(accessLogDatum);
+
+            }
+            curTs = curTs.plusSeconds(1);
+            if (!curTs.isBefore(endTs)) {
+                break;
+            }
+        }
+
+        return logDatums;
+
+
+
+    }
+
+
 
     public void generateFacts(final String startTimeStr, final String endTimeStr, int tps) {
 
@@ -244,6 +302,7 @@ public class FactGenerator {
 
     //Parquet "2014-11-13 11:06:00" "2014-11-13 11:08:00" 10 /factdatastore/logdata1.parq /opt/hadoop104/conf
 
+    ///Parquet "2014-11-13 11:06:00" "2014-11-13 11:08:00" 10 /Users/Sumanth/adhoc-query/factgen/datadump/logdata1.parq /opt/hadoop104/conf
     public static void main(String[] args) {
         if (args.length < 4) usage();
         FactGenerator factGenerator = new FactGenerator();
@@ -265,7 +324,19 @@ public class FactGenerator {
                 parquetDataProcessor.init();
                 factGenerator.getProcessors().add(parquetDataProcessor);
                 waitForCompletion=true;
-             }else {usage();}
+             }else if (destType.startsWith("Hive")) {
+            final String outFile = args[4];
+            final String hadoopConfDir=args[5];
+            HiveOrcDataProcessor hiveOrcDataProcessor = new HiveOrcDataProcessor(hadoopConfDir,outFile);
+            hiveOrcDataProcessor.init();
+            factGenerator.getProcessors().add(hiveOrcDataProcessor);
+            waitForCompletion=true;
+
+
+            }else {usage();}
+
+
+
 
 
         factGenerator.init(tps);

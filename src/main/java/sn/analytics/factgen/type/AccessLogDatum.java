@@ -51,6 +51,9 @@ public class AccessLogDatum implements Serializable {
     public int dayOfWeek;
     public int monthOfYear;
 
+    //newly added
+    public String day;
+
     public String toCsv() {
         return ReflectionToStringBuilder.toString(this, ToStringStyle.SIMPLE_STYLE);
     }
@@ -104,6 +107,34 @@ public class AccessLogDatum implements Serializable {
         System.out.println(sb.toString());
 
     }
+    public static  void dumpHiveOrcFormat(){
+
+
+        List<Field> fields =
+                FieldUtils.getAllFieldsList(AccessLogDatum.class);
+
+        final StringBuilder sb = new StringBuilder();
+        sb.append("struct<");
+        for(Field fld: fields){
+
+            if (fld.getType().equals(String.class)){
+                sb.append(fld.getName()).append(":").append("string");
+
+            }else if (fld.getType().getName().equals("int")){
+                sb.append(fld.getName()).append(":").append("int");
+            }else if (fld.getType().getName().equals("double")){
+                sb.append(fld.getName()).append(":").append("double");
+
+            }
+            sb.append(",");
+
+        }
+        sb.deleteCharAt(sb.length()-1);
+        sb.append(">");
+
+        System.out.println(sb.toString());
+
+    }
 
     public static void printFieldNames(){
         List<Field> fields =
@@ -120,10 +151,32 @@ public class AccessLogDatum implements Serializable {
         }
 
     }
+
+    public static void printContainerAddStmts(){
+        List<Field> fields =
+                FieldUtils.getAllFieldsList(AccessLogDatum.class);
+
+        int i=0;
+        for(Field fld : fields){
+            //System.out.print(fld.getType().getName());
+            StringBuilder sb = new StringBuilder();
+         /*   sb.append("logData.");
+            sb.append(fld.getName()).append("=").append("datum.").append(fld.getName());
+            sb.append(";");*/
+            //sb.append(fld.getName() +" " + )
+            sb.append("orcContainer.add(").append(i).append(",").append("accessLogDatum.").append(fld.getName());
+            sb.append(");");
+            System.out.println(sb.toString());
+            i++;
+        }
+
+    }
     public static void main(String[] args) {
 
        // dumpAvroSchema();
-        printFieldNames();
+       // printFieldNames();
+        //dumpHiveOrcFormat();
+        printContainerAddStmts();
 
     }
 }
