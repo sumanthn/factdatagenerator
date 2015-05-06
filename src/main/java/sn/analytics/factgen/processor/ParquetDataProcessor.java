@@ -3,107 +3,96 @@ package sn.analytics.factgen.processor;
 import org.apache.avro.Schema;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.hive.ql.io.parquet.write.DataWritableWriteSupport;
+import org.apache.hadoop.io.*;
 import org.joda.time.DateTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import parquet.avro.AvroParquetWriter;
+import parquet.hadoop.ParquetWriter;
 import parquet.hadoop.metadata.CompressionCodecName;
+import parquet.schema.MessageType;
+import parquet.schema.MessageTypeParser;
 import sn.analytics.factgen.FactGenerator;
 import sn.analytics.factgen.type.AccessLogDatum;
 import sn.analytics.type.LogData;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 
 /**
- * Parquet, Avro based file processor
- * Created by Sumanth
+ * Created by Sumanth on 05/05/15.
  */
-public class ParquetDataProcessor implements DataProcessor {
+public class ParquetDataProcessor implements DataProcessor{
 
-     private Logger logger = LoggerFactory.getLogger(ParquetDataProcessor.class);
-    //to generate schema
-    // java -jar avro-tools-1.7.7.jar compile schema <schemafile> <outdir>
 
     Configuration conf = new Configuration();
 
     private final String hadoopConfDir;
     private final String outFile;
-    public    Schema FACT_SCHEMA;
-    AvroParquetWriter<LogData> writer;
+    MessageType FACT_SCHEMA;
+    ParquetWriter writer;
     Path outFilePath;
 
-    public ParquetDataProcessor(String hadoopConfDir, String outFile) {
+    public ParquetDataProcessor(String hadoopConfDir, String outFile){
         this.hadoopConfDir = hadoopConfDir;
         this.outFile = outFile;
     }
+
 
     @Override
     public void init() {
         conf.addResource(new Path(hadoopConfDir+"/core-site.xml"));
         conf.addResource(new Path(hadoopConfDir+"/hdfs-site.xml"));
         conf.addResource(new Path(hadoopConfDir+"/mapred-site.xml"));
-        System.out.println(conf.toString());
+
         initSchema();
         initWriter();
-
-    }
-    private void initSchema(){
-        InputStream streamReader =ParquetDataProcessor.class.getResourceAsStream("/LogData.avsc");
-        try {
-            FACT_SCHEMA= Schema.parse(streamReader);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    private void initWriter(){
-        outFilePath= new Path(outFile);
-
-        try {
-            writer=
-                    new AvroParquetWriter<LogData>(outFilePath, FACT_SCHEMA,
-                            CompressionCodecName.SNAPPY,
-                            AvroParquetWriter.DEFAULT_BLOCK_SIZE,
-                            AvroParquetWriter.DEFAULT_BLOCK_SIZE,
-                            false,
-                            conf);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
     public void processDataItem(AccessLogDatum datum) {
-        LogData logData = new LogData();
-        logData.accessUrl=datum.accessUrl;
-        logData.responseStatusCode=datum.responseStatusCode;
-        logData.responseTime=datum.responseTime;
-        logData.accessTimestamp= DateTime.parse(datum.accessTimestamp, FactGenerator.MILL_SECONDS_FORMAT).getMillis();
 
-        logData.requestVerb=datum.requestVerb;
-        logData.requestSize=datum.requestSize;
-        logData.dataExchangeSize=datum.dataExchangeSize;
-        logData.serverIp=datum.serverIp;
-        logData.clientIp=datum.clientIp;
-        logData.clientId=datum.clientId;
-        logData.sessionId=datum.sessionId;
-        logData.userAgentDevice=datum.userAgentDevice;
-        logData.UserAgentType=datum.UserAgentType;
-        logData.userAgentFamily=datum.userAgentFamily;
-        logData.userAgentOSFamily=datum.userAgentOSFamily;
-        logData.userAgentVersion=datum.userAgentVersion;
-        logData.userAgentOSVersion=datum.userAgentOSVersion;
-        logData.city=datum.city;
-        logData.country=datum.country;
-        logData.region=datum.region;
-        logData.minOfDay=datum.minOfDay;
-        logData.hourOfDay=datum.hourOfDay;
-        logData.dayOfWeek=datum.dayOfWeek;
-        logData.monthOfYear=datum.monthOfYear;
+
+        //Writable[] rec = new Writable[28];
+        Writable[] rec = new Writable[25];
+
+
+        rec[0]= new BytesWritable(datum.accessUrl.getBytes());
+        rec[1]= new IntWritable(datum.responseStatusCode);
+        rec[2]= new IntWritable(datum.responseTime);
+        rec[3]= new BytesWritable(datum.accessTimestamp.getBytes());
+        rec[4]= new BytesWritable(datum.requestVerb.getBytes());
+        rec[5]= new IntWritable(datum.requestSize);
+        rec[6]= new IntWritable(datum.dataExchangeSize);
+        rec[7]= new BytesWritable(datum.serverIp.getBytes());
+        rec[8]= new BytesWritable(datum.clientIp.getBytes());
+        rec[9]= new BytesWritable(datum.clientId.getBytes());
+        rec[10]= new BytesWritable(datum.sessionId.getBytes());
+        rec[11]= new BytesWritable(datum.userAgentDevice.getBytes());
+        rec[12]= new BytesWritable(datum.UserAgentType.getBytes());
+        rec[13]= new BytesWritable(datum.userAgentFamily.getBytes());
+        rec[14]= new BytesWritable(datum.userAgentOSFamily.getBytes());
+        rec[15]= new BytesWritable(datum.userAgentVersion.getBytes());
+        rec[16]= new BytesWritable(datum.userAgentOSVersion.getBytes());
+        rec[17]= new BytesWritable(datum.city.getBytes());
+        rec[18]= new BytesWritable(datum.country.getBytes());
+        rec[19]= new BytesWritable(datum.region.getBytes());
+        rec[20]= new IntWritable(datum.minOfDay);
+        rec[21]= new IntWritable(datum.hourOfDay);
+        rec[22]= new IntWritable(datum.dayOfWeek);
+        rec[23]= new IntWritable(datum.monthOfYear);
+        rec[24]= new BytesWritable(datum.day.getBytes());
+/*
+
+        rec[25]= new BytesWritable("Var1".getBytes());
+        rec[26]= new BytesWritable("Var2".getBytes());
+        rec[27]= new BytesWritable("Var3".getBytes());
+*/
+
+
+        ArrayWritable recordData = new ArrayWritable(Writable.class, rec);
 
 
         try {
-            writer.write(logData);
+            writer.write(recordData);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -113,13 +102,52 @@ public class ParquetDataProcessor implements DataProcessor {
     @Override
     public void close() {
 
-         logger.info("Writing completed to " + outFile);
-        try{
+        try {
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    private void initSchema(){
+        InputStream streamReader =ParquetDataProcessor.class.getResourceAsStream("/LogData.parq");
+        StringBuilder schema = new StringBuilder();
 
+        try {
+            BufferedReader br = new BufferedReader(new InputStreamReader(streamReader, "UTF-8"));
+            String line = br.readLine();
+            while(line!=null){
+                schema.append(line.trim());
+                schema.append(" ");
+
+                line = br.readLine();
+            }
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        FACT_SCHEMA= MessageTypeParser.parseMessageType(schema.toString());
+       // System.out.println(FACT_SCHEMA);
+
+    }
+    private void initWriter(){
+        outFilePath= new Path(outFile);
+        DataWritableWriteSupport.setSchema(FACT_SCHEMA, conf);
+        try {
+            writer=new ParquetWriter(outFilePath, new DataWritableWriteSupport () {
+                @Override
+                public WriteContext init(Configuration configuration) {
+                    if (configuration.get(DataWritableWriteSupport.PARQUET_HIVE_SCHEMA) == null) {
+                        configuration.set(DataWritableWriteSupport.PARQUET_HIVE_SCHEMA, FACT_SCHEMA.toString());
+                    }
+                    return super.init(configuration);
+                }
+            },CompressionCodecName.SNAPPY, 256*1024*1024, 100*1024);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

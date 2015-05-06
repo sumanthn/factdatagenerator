@@ -6,10 +6,7 @@ import org.apache.commons.math3.distribution.ZipfDistribution;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import sn.analytics.factgen.processor.DataProcessor;
-import sn.analytics.factgen.processor.FileDumper;
-import sn.analytics.factgen.processor.HiveOrcDataProcessor;
-import sn.analytics.factgen.processor.ParquetDataProcessor;
+import sn.analytics.factgen.processor.*;
 import sn.analytics.factgen.type.AccessLogDatum;
 import sn.analytics.factgen.type.GeoData;
 import sn.analytics.factgen.type.RequestUriData;
@@ -33,7 +30,7 @@ public class FactGenerator {
 
     int maxUserAgents = 50;
     int maxClientIds = 1000;
-     List<DataProcessor> processors = new ArrayList<DataProcessor>();
+    List<DataProcessor> processors = new ArrayList<DataProcessor>();
 
     Map<String, GeoData> geoDataMap = new HashMap<String, GeoData>();
     private List<RequestUriData> uridataBag = new ArrayList<RequestUriData>();
@@ -41,7 +38,7 @@ public class FactGenerator {
     private String[] clientIpSet = new String[maxClientIp];
     private String[] serverIpSet = new String[maxServerIp];
 
-    private String [] clientIdSet = new String[maxClientIds];
+    private String[] clientIdSet = new String[maxClientIds];
     private SessionData curSessionData;
     Random rgen;
 
@@ -75,30 +72,30 @@ public class FactGenerator {
     }
 
 
-    private void generateClientIds(){
+    private void generateClientIds() {
         Random random = new Random(2010);
-        for(int i=0;i < maxClientIds;i++)
+        for (int i = 0; i < maxClientIds; i++)
             clientIdSet[i] = "" + random.nextInt(10201);
 
     }
 
-    private void initSessionData(){
+    private void initSessionData() {
         int userAgentIdx = rgen.nextInt(maxUserAgents);
         int clientHostIdx = rgen.nextInt(maxClientIp);
         curSessionData = new SessionData(UUID.randomUUID().toString(),
                 clientIdSet[rgen.nextInt(clientIdSet.length)],
-                userAgentIdx,clientHostIdx );
+                userAgentIdx, clientHostIdx);
 
     }
 
-    private AccessLogDatum buildDatum(final DateTime dateTimeIn,boolean flipSessionId) {
+    private AccessLogDatum buildDatum(final DateTime dateTimeIn, boolean flipSessionId) {
 
         if (flipSessionId)
             initSessionData();
-            
+
 
         RequestUriData uridata = uridataBag.get(rgen.nextInt(uridataBag.size()));
-        String target = Data.targetStrs[rgen.nextInt(Data.targetStrs.length)] + "/"+ uridata.getUriName();
+        String target = Data.targetStrs[rgen.nextInt(Data.targetStrs.length)] + "/" + uridata.getUriName();
 
         int statusCode = Data.responseCodes[responseCodeSample.sample() - 1];
 
@@ -120,7 +117,7 @@ public class FactGenerator {
         int clientHostIdx = curSessionData.getClientIpIdx();
         accessLogDatum.clientIp = clientIpSet[clientHostIdx];
 
-        accessLogDatum.dataExchangeSize = uridata.getResponseSize() + 2* Math.abs(rgen.nextInt(500)) ;
+        accessLogDatum.dataExchangeSize = uridata.getResponseSize() + 2 * Math.abs(rgen.nextInt(500));
 
         int multiplerEffect = rgen.nextInt(6);
         int responseTimeAddenum = multiplerEffect * Double.valueOf(adder.sample()).intValue();
@@ -136,10 +133,10 @@ public class FactGenerator {
         // "Mobile Browser,7.1,iOS,7.0,Tablet,Mobile Safari",
         accessLogDatum.userAgentDevice = userAgentTkns[4];
         accessLogDatum.UserAgentType = userAgentTkns[0];
-        accessLogDatum.userAgentFamily =userAgentTkns[5];
-        accessLogDatum.userAgentOSFamily=userAgentTkns[2];
-        accessLogDatum.userAgentOSVersion=userAgentTkns[1];
-        accessLogDatum.userAgentVersion=userAgentTkns[3];
+        accessLogDatum.userAgentFamily = userAgentTkns[5];
+        accessLogDatum.userAgentOSFamily = userAgentTkns[2];
+        accessLogDatum.userAgentOSVersion = userAgentTkns[1];
+        accessLogDatum.userAgentVersion = userAgentTkns[3];
 
         GeoData geoData = geoDataMap.get(clientIpSet[clientHostIdx]);
         if (geoData != null) {
@@ -152,7 +149,7 @@ public class FactGenerator {
             //instead of unknown
             accessLogDatum.city = "Bangalore";
             accessLogDatum.country = "IN";
-            accessLogDatum.region="India";
+            accessLogDatum.region = "India";
 
         }
         accessLogDatum.hourOfDay = dateTime.getHourOfDay();
@@ -167,37 +164,37 @@ public class FactGenerator {
     }
 
 
-    public List<AccessLogDatum> generateFactDatumBag(final String startTimeStr, final String endTimeStr, int tps ){
-            List<AccessLogDatum> logDatums = new ArrayList<AccessLogDatum>();
+    public List<AccessLogDatum> generateFactDatumBag(final String startTimeStr, final String endTimeStr, int tps) {
+        List<AccessLogDatum> logDatums = new ArrayList<AccessLogDatum>();
         DateTime curTs = DateTime.parse(startTimeStr, SECONDS_FORMAT);
         DateTime endTs = DateTime.parse(endTimeStr, SECONDS_FORMAT);
-        logger.info("Generate access log data for " + startTimeStr + "[" + curTs.getMillis() +"]"
-                + endTimeStr + "[" + endTs.getMillis() + "]" + " for " + tps );
+        logger.info("Generate access log data for " + startTimeStr + "[" + curTs.getMillis() + "]"
+                + endTimeStr + "[" + endTs.getMillis() + "]" + " for " + tps);
         int maxTxnPerSessionPerUser = 3;
         if (tps > 500)
-            maxTxnPerSessionPerUser=6;
+            maxTxnPerSessionPerUser = 6;
 
         while (true) {
 
-            int txnInSession =0;
+            int txnInSession = 0;
             boolean flipSession = false;
 
             for (int i = 0; i < tps; i++) {
                 txnInSession++;
                 if (txnInSession > maxTxnPerSessionPerUser) {
                     flipSession = true;
-                    txnInSession=0;
+                    txnInSession = 0;
 
                     //just make it a little random
-                    if (maxTxnPerSessionPerUser < 1) maxTxnPerSessionPerUser =2;
+                    if (maxTxnPerSessionPerUser < 1) maxTxnPerSessionPerUser = 2;
                     int nextRandInt = rgen.nextInt(maxTxnPerSessionPerUser);
                     if (nextRandInt < 2)
                         maxTxnPerSessionPerUser = 2;
                     else
-                        maxTxnPerSessionPerUser = nextRandInt ;
+                        maxTxnPerSessionPerUser = nextRandInt;
 
-                }else{
-                    flipSession=false;
+                } else {
+                    flipSession = false;
 
                 }
 
@@ -214,42 +211,40 @@ public class FactGenerator {
         return logDatums;
 
 
-
     }
-
 
 
     public void generateFacts(final String startTimeStr, final String endTimeStr, int tps) {
 
         DateTime curTs = DateTime.parse(startTimeStr, SECONDS_FORMAT);
         DateTime endTs = DateTime.parse(endTimeStr, SECONDS_FORMAT);
-        logger.info("Generate access log data for " + startTimeStr + "[" + curTs.getMillis() +"]"
-                + endTimeStr + "[" + endTs.getMillis() + "]" + " for " + tps );
+        logger.info("Generate access log data for " + startTimeStr + "[" + curTs.getMillis() + "]"
+                + endTimeStr + "[" + endTs.getMillis() + "]" + " for " + tps);
         int maxTxnPerSessionPerUser = 3;
         if (tps > 500)
-            maxTxnPerSessionPerUser=6;
+            maxTxnPerSessionPerUser = 6;
 
         while (true) {
 
-            int txnInSession =0;
+            int txnInSession = 0;
             boolean flipSession = false;
 
             for (int i = 0; i < tps; i++) {
                 txnInSession++;
                 if (txnInSession > maxTxnPerSessionPerUser) {
                     flipSession = true;
-                    txnInSession=0;
-                    
+                    txnInSession = 0;
+
                     //just make it a little random
-                    if (maxTxnPerSessionPerUser < 1) maxTxnPerSessionPerUser =2;
+                    if (maxTxnPerSessionPerUser < 1) maxTxnPerSessionPerUser = 2;
                     int nextRandInt = rgen.nextInt(maxTxnPerSessionPerUser);
-                    if (nextRandInt < 2) 
+                    if (nextRandInt < 2)
                         maxTxnPerSessionPerUser = 2;
                     else
-                        maxTxnPerSessionPerUser = nextRandInt ;
+                        maxTxnPerSessionPerUser = nextRandInt;
 
-                }else{
-                    flipSession=false;
+                } else {
+                    flipSession = false;
 
                 }
 
@@ -278,7 +273,7 @@ public class FactGenerator {
 
     public synchronized void init(int tps) {
 
-       // orgs = InputDataLoader.readOrgNames();
+        // orgs = InputDataLoader.readOrgNames();
         uridataBag = InputDataLoader.readURIs();
         rgen = new Random();
         //bring in the Ip set
@@ -308,40 +303,56 @@ public class FactGenerator {
         FactGenerator factGenerator = new FactGenerator();
         boolean waitForCompletion = false;
 
-       final String destType = args[0];
-        int tps= Integer.valueOf(args[3]);
+        final String destType = args[0];
+        int tps = Integer.valueOf(args[3]);
 
 
         if (destType.startsWith("File")) {
-                final String fileName = args[4];
-                DataProcessor fileProcessor = new FileDumper(fileName, false);
-                fileProcessor.init();
-                factGenerator.getProcessors().add(fileProcessor);
-            } else if (destType.startsWith("Parquet")) {
-                final String outFile = args[4];
-                final String hadoopConfDir=args[5];
-                ParquetDataProcessor parquetDataProcessor = new ParquetDataProcessor(hadoopConfDir,outFile);
-                parquetDataProcessor.init();
-                factGenerator.getProcessors().add(parquetDataProcessor);
-                waitForCompletion=true;
-             }else if (destType.startsWith("Hive")) {
+            final String fileName = args[4];
+            DataProcessor fileProcessor = new FileDumper(fileName, false);
+            fileProcessor.init();
+            factGenerator.getProcessors().add(fileProcessor);
+        }
+        else if (destType.equals("Avro")) {
             final String outFile = args[4];
-            final String hadoopConfDir=args[5];
-            HiveOrcDataProcessor hiveOrcDataProcessor = new HiveOrcDataProcessor(hadoopConfDir,outFile);
+
+            AvroDataProcessor avroDataProcessor = new AvroDataProcessor(outFile);
+            avroDataProcessor.init();
+            factGenerator.getProcessors().add(avroDataProcessor);
+            waitForCompletion = true;
+
+        }else if (destType.startsWith("Parquet")) {
+            final String outFile = args[4];
+            final String hadoopConfDir = args[5];
+            ParquetDataProcessor parquetDataProcessor = new ParquetDataProcessor(hadoopConfDir, outFile);
+            parquetDataProcessor.init();
+            factGenerator.getProcessors().add(parquetDataProcessor);
+            waitForCompletion = true;
+        } else if (destType.startsWith("Hive")) {
+            final String outFile = args[4];
+            final String hadoopConfDir = args[5];
+            HiveOrcDataProcessor hiveOrcDataProcessor = new HiveOrcDataProcessor(hadoopConfDir, outFile);
             hiveOrcDataProcessor.init();
             factGenerator.getProcessors().add(hiveOrcDataProcessor);
-            waitForCompletion=true;
+            waitForCompletion = true;
 
 
-            }else {usage();}
+        } else if (destType.startsWith("AvroParquet")) {
+            final String outFile = args[4];
+            final String hadoopConfDir = args[5];
+            ParquetAvroDataProcessor parquetDataProcessor = new ParquetAvroDataProcessor(hadoopConfDir, outFile);
+            parquetDataProcessor.init();
+            factGenerator.getProcessors().add(parquetDataProcessor);
+            waitForCompletion = true;
 
-
-
+        } else {
+            usage();
+        }
 
 
         factGenerator.init(tps);
         Stopwatch sw = Stopwatch.createStarted();
-        factGenerator.generateFacts(args[1], args[2],tps);
+        factGenerator.generateFacts(args[1], args[2], tps);
         sw.stop();
 
         factGenerator.finalizeResources();

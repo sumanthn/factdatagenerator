@@ -26,6 +26,8 @@
     {"name":  "minOfDay" , "type":"int"},
     {"name":  "hourOfDay" , "type":"int"},
     {"name":  "dayOfWeek" , "type":"int"},
-    {"name":  "monthOfYear" , "type":"int"}
+    {"name":  "monthOfYear" , "type":"int"},
+    {"name":  "day" , "type":"string"}
+
     ]
 }

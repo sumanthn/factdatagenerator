@@ -22,7 +22,7 @@ public class ParquetDataReader {
         Configuration conf = new Configuration();
 
          final String hadoopConfDir="/opt/hadoop104/conf";
-         final String inFilePath="/factdatastore/logdata1.parq";
+         final String inFilePath="/Users/Sumanth/adhoc-query/factgen/datadump/logdata2.parq";
          Schema FACT_SCHEMA;
         InputStream streamReader =ParquetDataReader.class.getResourceAsStream("/LogData.avsc");
         try {
@@ -43,7 +43,7 @@ public class ParquetDataReader {
             
             LogData logData = logDataAvroParquetReader.read();
             while(logData!=null){
-                System.out.println(logData.getAccessTimestamp() + " " + logData.getCity());
+                System.out.println(logData.getDay() + " " + logData.getCity());
                 logData = logDataAvroParquetReader.read();
             }
         } catch (IOException e) {

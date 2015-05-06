@@ -1,0 +1,31 @@
+message LogData{
+
+required  binary accessUrl (UTF8);
+optional  int32 responseStatusCode;
+optional  int32 responseTime;
+required  binary accessTimestamp (UTF8);
+optional  binary requestVerb (UTF8);
+optional  int32 requestSize;
+optional  int32 dataExchangeSize;
+optional  binary serverIp (UTF8);
+optional  binary clientIp (UTF8);
+optional  binary clientId (UTF8);
+optional  binary sessionId (UTF8);
+optional  binary userAgentDevice (UTF8);
+optional  binary UserAgentType (UTF8);
+optional  binary userAgentFamily (UTF8);
+optional  binary userAgentOSFamily (UTF8);
+optional  binary userAgentVersion (UTF8);
+optional  binary userAgentOSVersion (UTF8);
+optional  binary city (UTF8);
+optional  binary country (UTF8);
+optional  binary region (UTF8);
+optional  int32 minOfDay;
+optional  int32 hourOfDay;
+optional  int32 dayOfWeek;
+optional  int32 monthOfYear;
+optional  binary day (UTF8);
+
+
+
+}

@@ -8,7 +8,7 @@ package sn.analytics.type;
 /** Accesslogdata */
 @org.apache.avro.specific.AvroGenerated
 public class LogData extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"LogData\",\"namespace\":\"sn.analytics.type\",\"doc\":\"Accesslogdata\",\"fields\":[{\"name\":\"accessUrl\",\"type\":\"string\"},{\"name\":\"responseStatusCode\",\"type\":\"int\"},{\"name\":\"responseTime\",\"type\":\"int\"},{\"name\":\"accessTimestamp\",\"type\":\"long\"},{\"name\":\"requestVerb\",\"type\":\"string\"},{\"name\":\"requestSize\",\"type\":\"int\"},{\"name\":\"dataExchangeSize\",\"type\":\"int\"},{\"name\":\"serverIp\",\"type\":\"string\"},{\"name\":\"clientIp\",\"type\":\"string\"},{\"name\":\"clientId\",\"type\":\"string\"},{\"name\":\"sessionId\",\"type\":\"string\"},{\"name\":\"userAgentDevice\",\"type\":\"string\"},{\"name\":\"UserAgentType\",\"type\":\"string\"},{\"name\":\"userAgentFamily\",\"type\":\"string\"},{\"name\":\"userAgentOSFamily\",\"type\":\"string\"},{\"name\":\"userAgentVersion\",\"type\":\"string\"},{\"name\":\"userAgentOSVersion\",\"type\":\"string\"},{\"name\":\"city\",\"type\":\"string\"},{\"name\":\"country\",\"type\":\"string\"},{\"name\":\"region\",\"type\":\"string\"},{\"name\":\"minOfDay\",\"type\":\"int\"},{\"name\":\"hourOfDay\",\"type\":\"int\"},{\"name\":\"dayOfWeek\",\"type\":\"int\"},{\"name\":\"monthOfYear\",\"type\":\"int\"}]}");
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"LogData\",\"namespace\":\"sn.analytics.type\",\"doc\":\"Accesslogdata\",\"fields\":[{\"name\":\"accessUrl\",\"type\":\"string\"},{\"name\":\"responseStatusCode\",\"type\":\"int\"},{\"name\":\"responseTime\",\"type\":\"int\"},{\"name\":\"accessTimestamp\",\"type\":\"long\"},{\"name\":\"requestVerb\",\"type\":\"string\"},{\"name\":\"requestSize\",\"type\":\"int\"},{\"name\":\"dataExchangeSize\",\"type\":\"int\"},{\"name\":\"serverIp\",\"type\":\"string\"},{\"name\":\"clientIp\",\"type\":\"string\"},{\"name\":\"clientId\",\"type\":\"string\"},{\"name\":\"sessionId\",\"type\":\"string\"},{\"name\":\"userAgentDevice\",\"type\":\"string\"},{\"name\":\"UserAgentType\",\"type\":\"string\"},{\"name\":\"userAgentFamily\",\"type\":\"string\"},{\"name\":\"userAgentOSFamily\",\"type\":\"string\"},{\"name\":\"userAgentVersion\",\"type\":\"string\"},{\"name\":\"userAgentOSVersion\",\"type\":\"string\"},{\"name\":\"city\",\"type\":\"string\"},{\"name\":\"country\",\"type\":\"string\"},{\"name\":\"region\",\"type\":\"string\"},{\"name\":\"minOfDay\",\"type\":\"int\"},{\"name\":\"hourOfDay\",\"type\":\"int\"},{\"name\":\"dayOfWeek\",\"type\":\"int\"},{\"name\":\"monthOfYear\",\"type\":\"int\"},{\"name\":\"day\",\"type\":\"string\"}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
   @Deprecated public java.lang.CharSequence accessUrl;
   @Deprecated public int responseStatusCode;
@@ -34,6 +34,7 @@ public class LogData extends org.apache.avro.specific.SpecificRecordBase impleme
   @Deprecated public int hourOfDay;
   @Deprecated public int dayOfWeek;
   @Deprecated public int monthOfYear;
+  @Deprecated public java.lang.CharSequence day;
 
   /**
    * Default constructor.  Note that this does not initialize fields
@@ -45,7 +46,7 @@ public class LogData extends org.apache.avro.specific.SpecificRecordBase impleme
   /**
    * All-args constructor.
    */
-  public LogData(java.lang.CharSequence accessUrl, java.lang.Integer responseStatusCode, java.lang.Integer responseTime, java.lang.Long accessTimestamp, java.lang.CharSequence requestVerb, java.lang.Integer requestSize, java.lang.Integer dataExchangeSize, java.lang.CharSequence serverIp, java.lang.CharSequence clientIp, java.lang.CharSequence clientId, java.lang.CharSequence sessionId, java.lang.CharSequence userAgentDevice, java.lang.CharSequence UserAgentType, java.lang.CharSequence userAgentFamily, java.lang.CharSequence userAgentOSFamily, java.lang.CharSequence userAgentVersion, java.lang.CharSequence userAgentOSVersion, java.lang.CharSequence city, java.lang.CharSequence country, java.lang.CharSequence region, java.lang.Integer minOfDay, java.lang.Integer hourOfDay, java.lang.Integer dayOfWeek, java.lang.Integer monthOfYear) {
+  public LogData(java.lang.CharSequence accessUrl, java.lang.Integer responseStatusCode, java.lang.Integer responseTime, java.lang.Long accessTimestamp, java.lang.CharSequence requestVerb, java.lang.Integer requestSize, java.lang.Integer dataExchangeSize, java.lang.CharSequence serverIp, java.lang.CharSequence clientIp, java.lang.CharSequence clientId, java.lang.CharSequence sessionId, java.lang.CharSequence userAgentDevice, java.lang.CharSequence UserAgentType, java.lang.CharSequence userAgentFamily, java.lang.CharSequence userAgentOSFamily, java.lang.CharSequence userAgentVersion, java.lang.CharSequence userAgentOSVersion, java.lang.CharSequence city, java.lang.CharSequence country, java.lang.CharSequence region, java.lang.Integer minOfDay, java.lang.Integer hourOfDay, java.lang.Integer dayOfWeek, java.lang.Integer monthOfYear, java.lang.CharSequence day) {
     this.accessUrl = accessUrl;
     this.responseStatusCode = responseStatusCode;
     this.responseTime = responseTime;
@@ -70,6 +71,7 @@ public class LogData extends org.apache.avro.specific.SpecificRecordBase impleme
     this.hourOfDay = hourOfDay;
     this.dayOfWeek = dayOfWeek;
     this.monthOfYear = monthOfYear;
+    this.day = day;
   }
 
   public org.apache.avro.Schema getSchema() { return SCHEMA$; }
@@ -100,6 +102,7 @@ public class LogData extends org.apache.avro.specific.SpecificRecordBase impleme
     case 21: return hourOfDay;
     case 22: return dayOfWeek;
     case 23: return monthOfYear;
+    case 24: return day;
     default: throw new org.apache.avro.AvroRuntimeException("Bad index");
     }
   }
@@ -131,6 +134,7 @@ public class LogData extends org.apache.avro.specific.SpecificRecordBase impleme
     case 21: hourOfDay = (java.lang.Integer)value$; break;
     case 22: dayOfWeek = (java.lang.Integer)value$; break;
     case 23: monthOfYear = (java.lang.Integer)value$; break;
+    case 24: day = (java.lang.CharSequence)value$; break;
     default: throw new org.apache.avro.AvroRuntimeException("Bad index");
     }
   }
@@ -495,6 +499,21 @@ public class LogData extends org.apache.avro.specific.SpecificRecordBase impleme
     this.monthOfYear = value;
   }
 
+  /**
+   * Gets the value of the 'day' field.
+   */
+  public java.lang.CharSequence getDay() {
+    return day;
+  }
+
+  /**
+   * Sets the value of the 'day' field.
+   * @param value the value to set.
+   */
+  public void setDay(java.lang.CharSequence value) {
+    this.day = value;
+  }
+
   /** Creates a new LogData RecordBuilder */
   public static sn.analytics.type.LogData.Builder newBuilder() {
     return new sn.analytics.type.LogData.Builder();
@@ -540,6 +559,7 @@ public class LogData extends org.apache.avro.specific.SpecificRecordBase impleme
     private int hourOfDay;
     private int dayOfWeek;
     private int monthOfYear;
+    private java.lang.CharSequence day;
 
     /** Creates a new Builder */
     private Builder() {
@@ -645,6 +665,10 @@ public class LogData extends org.apache.avro.specific.SpecificRecordBase impleme
         this.monthOfYear = data().deepCopy(fields()[23].schema(), other.monthOfYear);
         fieldSetFlags()[23] = true;
       }
+      if (isValidValue(fields()[24], other.day)) {
+        this.day = data().deepCopy(fields()[24].schema(), other.day);
+        fieldSetFlags()[24] = true;
+      }
     }
     
     /** Creates a Builder by copying an existing LogData instance */
@@ -745,6 +769,10 @@ public class LogData extends org.apache.avro.specific.SpecificRecordBase impleme
       if (isValidValue(fields()[23], other.monthOfYear)) {
         this.monthOfYear = data().deepCopy(fields()[23].schema(), other.monthOfYear);
         fieldSetFlags()[23] = true;
+      }
+      if (isValidValue(fields()[24], other.day)) {
+        this.day = data().deepCopy(fields()[24].schema(), other.day);
+        fieldSetFlags()[24] = true;
       }
     }
 
@@ -1339,6 +1367,31 @@ public class LogData extends org.apache.avro.specific.SpecificRecordBase impleme
       return this;
     }
 
+    /** Gets the value of the 'day' field */
+    public java.lang.CharSequence getDay() {
+      return day;
+    }
+    
+    /** Sets the value of the 'day' field */
+    public sn.analytics.type.LogData.Builder setDay(java.lang.CharSequence value) {
+      validate(fields()[24], value);
+      this.day = value;
+      fieldSetFlags()[24] = true;
+      return this; 
+    }
+    
+    /** Checks whether the 'day' field has been set */
+    public boolean hasDay() {
+      return fieldSetFlags()[24];
+    }
+    
+    /** Clears the value of the 'day' field */
+    public sn.analytics.type.LogData.Builder clearDay() {
+      day = null;
+      fieldSetFlags()[24] = false;
+      return this;
+    }
+
     @Override
     public LogData build() {
       try {
@@ -1367,6 +1420,7 @@ public class LogData extends org.apache.avro.specific.SpecificRecordBase impleme
         record.hourOfDay = fieldSetFlags()[21] ? this.hourOfDay : (java.lang.Integer) defaultValue(fields()[21]);
         record.dayOfWeek = fieldSetFlags()[22] ? this.dayOfWeek : (java.lang.Integer) defaultValue(fields()[22]);
         record.monthOfYear = fieldSetFlags()[23] ? this.monthOfYear : (java.lang.Integer) defaultValue(fields()[23]);
+        record.day = fieldSetFlags()[24] ? this.day : (java.lang.CharSequence) defaultValue(fields()[24]);
         return record;
       } catch (Exception e) {
         throw new org.apache.avro.AvroRuntimeException(e);

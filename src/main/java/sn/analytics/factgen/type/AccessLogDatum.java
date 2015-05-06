@@ -136,6 +136,35 @@ public class AccessLogDatum implements Serializable {
 
     }
 
+    public static void dumpParquetSchema(){
+
+        List<Field> fields =
+                FieldUtils.getAllFieldsList(AccessLogDatum.class);
+
+        final StringBuilder sb = new StringBuilder();
+
+        for(Field fld: fields){
+            sb.append("optional ");
+            if (fld.getType().equals(String.class)){
+                sb.append(" string ");
+            }else if (fld.getType().getName().equals("int")){
+                sb.append(" int32 ");
+            }else if (fld.getType().getName().equals("double")){
+
+            }else if (fld.getType().getName().equals("long")) {
+                sb.append(" int64 ");
+            }
+            sb.append(fld.getName());
+
+            sb.append(";");
+
+        }
+        sb.deleteCharAt(sb.length() - 1);
+
+        System.out.println(sb.toString());
+
+    }
+
     public static void printFieldNames(){
         List<Field> fields =
                 FieldUtils.getAllFieldsList(AccessLogDatum.class);
@@ -171,12 +200,51 @@ public class AccessLogDatum implements Serializable {
         }
 
     }
+
+    public static void generateWriteable(){
+        List<Field> fields =
+                FieldUtils.getAllFieldsList(AccessLogDatum.class);
+
+
+        int fldCount =0;
+        for(Field fld: fields){
+            final StringBuilder sb = new StringBuilder();
+
+            sb.append("rec").append("[").append(fldCount).append("]");
+            sb.append("=");
+            if (fld.getType().equals(String.class)){
+
+                sb.append(" ").append("new BytesWritable").append("(datum.").append(fld.getName()).append(".getBytes());");
+            }else if (fld.getType().getName().equals("int")){
+
+                sb.append(" ").append("new IntWritable").append("(datum.").append(fld.getName()).append(");");
+            }else if (fld.getType().getName().equals("double")){
+                sb.append(" ").append("new DoubleWriteable").append("(datum.").append(fld.getName()).append(");");
+            }else if (fld.getType().getName().equals("long")) {
+                sb.append(" ").append("new LongWritable").append("(datum.").append(fld.getName()).append(");");
+            }
+
+            fldCount++;
+
+            System.out.println(sb.toString());
+        }
+
+       // sb.deleteCharAt(sb.length() - 1);
+
+
+
+
+    }
+
+
     public static void main(String[] args) {
 
        // dumpAvroSchema();
        // printFieldNames();
         //dumpHiveOrcFormat();
-        printContainerAddStmts();
+        //printContainerAddStmts();
+        //dumpParquetSchema();
+        generateWriteable();
 
     }
 }
